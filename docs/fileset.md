@@ -24,10 +24,7 @@ cache
 : Information about the file cache.
 
 on-get
-: Event to be triggered when a file is retrieved from a source.
-
-on-rm
-: Event to be triggered when a file is deleted from the cache.
+: Event to be triggered when an asset is retrieved from a source.
 
 `source`-types:
 
@@ -39,14 +36,10 @@ path
 : File-path to cache location. The variable `${source}` can be used for the source name.
   The path defaults to `~/.cache/fileset/${source}`.
 
-`on-get`, `on-rm` event definitions:
+`on-get` event definition:
 
 run
 : command to run for `${file}`
-
-log
-: if the event should be logged and to what destinations (comma separated list).
-  Valid options: `console`
 
 Full Example:
 
@@ -60,10 +53,6 @@ file-stores:
             path: ~/.cache/fileset/${source}
         on-get:
             run: '<command> ${file}'
-            log: console
-        on-rm:
-            run: '<command> ${file}'
-            log: console
 ```
 
 Sets

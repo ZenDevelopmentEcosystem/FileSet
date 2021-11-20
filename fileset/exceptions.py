@@ -1,0 +1,2 @@
+class FileSetException(Exception):
+    pass

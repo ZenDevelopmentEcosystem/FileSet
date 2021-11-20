@@ -1,13 +1,12 @@
-import click
 import coloredlogs
+
+from fileset.cli import entrypoint as cli_entrypoint
 
 coloredlogs.install(fmt='%(message)s')
 
 
-@click.group(context_settings={'help_option_names': ['-h', '--help']})
-@click.version_option(message='%(package)s, version %(version)s')
-def entrypoint() -> None:
-    pass
+def entrypoint():
+    cli_entrypoint()
 
 
 if __name__ == '__main__':
