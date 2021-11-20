@@ -9,7 +9,7 @@ PYZ := $(BUILD.dir)/fileset.pyz
 package: $(PYZ) $(WHEEL) $(SDIST) | $(BUILD.dir)
 
 $(PYZ): $(PY_SRC)
-	$(Q)$(POETRY) run shiv -e fileset.__main__:cli -o $(abspath $(@)) .
+	$(Q)$(POETRY) run shiv -e fileset.__main__:entrypoint -o $(abspath $(@)) .
 
 $(WHEEL): $(PY_SRC)
 	$(Q)$(POETRY) build -f wheel && mv dist/$(notdir $(@)) $(BUILD.dir)
