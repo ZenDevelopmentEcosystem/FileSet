@@ -1,0 +1,10 @@
+[flake8]
+max-line-length = 120
+exclude = generated,syntaxerror
+max-complexity = 17
+ignore =
+       # ignores the except Exception: check
+       B902,
+       # disable contradictory rule, W504 is the new standard (newline before binary operator)
+       # so we need to disable the old one.
+       W503

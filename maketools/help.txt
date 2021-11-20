@@ -1,0 +1,21 @@
+Usage: make [-jN] TARGET ARGS
+
+    help                Print this help.
+    make-help           Print targets related to development of the make-system
+    readme              Print README.
+
+  Build:
+    package             Build packages
+    clean               Clean build and intermediate artifacts
+
+  Development:
+    check               Run static, test, scan.
+    test                Run all unit test.
+    static              Run static code analysis.
+    scan                Run vulnerability scan.
+    format              Format source code.
+
+  Tools:
+    poetry              Installs poetry
+
+Set Q= , to echo commands run in recipes.

@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "fileset"
+version = "1.0.0"
+description = "Commandline tool and python library for working with file sets"
+authors = ["Per Böhlin <per.bohlin@devconsoft.se>"]
+packages = [
+    { include = "fileset" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "*"
+coloredlogs = "*"
+
+[tool.poetry.dev-dependencies]
+shiv = "*"
+flake8 = "*"
+yapf = "*"
+flake8-tuple = "*"
+flake8-blind-except = "*"
+flake8-class-newline = "*"
+flake8-comprehensions = "*"
+flake8-deprecated = "*"
+flake8-pep3101 = "*"
+flake8-quotes = "*"
+isort = "*"
+pydocstyle = "*"
+pytest-mock = "*"
+pytest-cov = "*"
+pytest-bdd = "*"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+"fileset" = "fileset.__main__:entrypoint"
+
+[tool.isort]
+line_length = 100
+multi_line_output = 2
