@@ -5,15 +5,16 @@ Usage: make [-jN] TARGET ARGS
     readme              Print README.
 
   Build:
-    package             Build packages
     clean               Clean build and intermediate artifacts
+    package             Build packages
 
   Development:
     check               Run static, test, scan.
-    test                Run all unit test.
-    static              Run static code analysis.
-    scan                Run vulnerability scan.
     format              Format source code.
+    scan                Run vulnerability scan.
+    static              Run static code analysis.
+    systest             Run system test.
+    test                Run all unit test.
 
   Tools:
     poetry              Installs poetry
