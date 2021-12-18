@@ -27,7 +27,8 @@ Use fileset (see [fileset](../fileset.md#sets) for more info):
 fileset <store> get [-s/--set <fileset.yml>] ...
 ```
 
-If a `FileSet.yml` file exists in the current working directory, it will be applied, unless `--set <fileset.yml>` is used.
+If a `FileSet.yml` file exists in the current working directory, it will be applied,
+unless `--set <fileset.yml>` is used.
 
 To get a subset of the set, specify one or more paths:
 
@@ -41,7 +42,8 @@ To get a specific asset ID, specify one or more IDs:
 fileset <store> get [-s/--set <fileset.yml>] ID ...
 ```
 
-To get a specific asset ID from the file-store, specify one or more IDs:
+To get a specific asset ID from the file-store without a set-definition, use the `get+` (get plus command),
+specify one or more IDs:
 
 ```console
 # ID from full index
