@@ -28,7 +28,7 @@ pydocstyle = "*"
 pytest-mock = "*"
 pytest-cov = "*"
 pytest-bdd = "*"
-
+pytest-testinfra = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

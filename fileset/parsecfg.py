@@ -3,7 +3,7 @@ from pathlib import Path
 
 from ruamel.yaml import YAML
 
-import fileset.storageengines.csv  # noqa disable=F401
+import fileset.sources.csv  # noqa disable=F401
 
 from .config import get_config_factory
 from .exception import FileSetException

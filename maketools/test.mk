@@ -13,6 +13,8 @@ test:
 systest: $(PYZ) $(WHEEL) $(SDIST) | $(REPORTS.dir)
 	$(Q)poetry run pytest features \
 		--fileset-path "$(realpath $(PYZ))" \
+		--wheel-package-path "$(realpath $(WHEEL))" \
+		--sdist-package-path "$(realpath $(SDIST))" \
 		--cucumber-json=$(REPORTS.dir)/cucumber.json \
 		--junit-xml=$(REPORTS.dir)/system-test-report-junit.xml \
 		--gherkin-terminal-reporter \

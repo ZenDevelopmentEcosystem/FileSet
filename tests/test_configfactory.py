@@ -1,6 +1,7 @@
 import pytest
 
 from fileset.config import Cache, ConfigFactory, OnGet, Store
+from fileset.exceptions import FileSetException
 
 
 class DummySource:
@@ -67,6 +68,14 @@ class CheckConfig:
             self.store(expected[store], result[store])
 
 
+def assert_invalid_property(ctx, section):
+    assert ctx.value.args[0] == f"Invalid property 'INVALID' in {section} definition"
+
+
+def assert_missing_property(ctx, property, section):
+    assert ctx.value.args[0] == f"Missing property '{property}' in {section} definition"
+
+
 @pytest.fixture()
 def raw():
     return RawConfig()
@@ -89,9 +98,34 @@ def check():
     return CheckConfig()
 
 
+@pytest.fixture()
+def invalid():
+    return {'INVALID': 'path'}
+
+
+@pytest.fixture()
+def missing():
+    return {}
+
+
+# -- on_get --
+
+
 def test_create_on_get(cf, raw, expected, check):
     result = cf.create_on_get(raw.on_get)
     check.on_get(expected.on_get, result)
+
+
+def test_create_on_get_invalid_property_raise_exception(cf, invalid):
+    with pytest.raises(FileSetException) as ctx:
+        cf.create_on_get(invalid)
+    assert_invalid_property(ctx, 'on-get')
+
+
+def test_create_on_get_missing_property_raise_exception(cf, missing):
+    with pytest.raises(FileSetException) as ctx:
+        cf.create_on_get(missing)
+    assert_missing_property(ctx, 'run', 'on-get')
 
 
 def test_create_cache(cf, raw, expected, check):

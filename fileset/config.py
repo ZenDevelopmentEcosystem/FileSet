@@ -1,3 +1,24 @@
+from fileset.exceptions import FileSetException
+
+STORE_PROPERTIES = ['source', 'cache', 'on-get']
+SOURCE_PROPERTIES = []
+CACHE_PROPERTIES = ['path']
+ON_GET_PROPERTIES = ['run']
+
+
+def validate_properties(raw_config, valid_properties, section):
+    for prop in list(raw_config):
+        if prop not in valid_properties:
+            raise FileSetException(f"Invalid property '{prop}' in {section} definition")
+
+
+def missing_property_handler(func, section):
+    try:
+        return func()
+    except KeyError as err:
+        raise FileSetException(f'Missing property {err} in {section} definition')
+
+
 class ConfigFactory:
 
     def __init__(self):
@@ -20,7 +41,8 @@ class ConfigFactory:
         return Cache(raw_config['path'])
 
     def create_on_get(self, raw_config):
-        return OnGet(raw_config['run'])
+        validate_properties(raw_config, ON_GET_PROPERTIES, 'on-get')
+        return missing_property_handler(lambda: OnGet(raw_config['run']), 'on-get')
 
     def create_source(self, name, raw_config):
         return self.src_constructors[name](raw_config)

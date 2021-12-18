@@ -2,23 +2,23 @@ Feature: fileset
 
 fileset is a command-line utility and python library for working with file-sets.
 
-Scenario: Listing top help (long)
+Scenario: Print top help (long)
     Given fileset
     And timeout 5 seconds
-    When run with argument(s) `--help`
+    When fileset run with argument(s) `--help`
     Then exit code 0
     And output contains 'Usage'
 
-Scenario: Listing top help (short)
+Scenario: Print top help (short)
     Given fileset
     And timeout 5 seconds
-    When run with argument(s) `-h`
+    When fileset run with argument(s) `-h`
     Then exit code 0
     And output contains 'Usage'
 
-Scenario: List version
+Scenario: Print version
     Given fileset
     And timeout 5 seconds
-    When run with argument(s) `--version`
+    When fileset run with argument(s) `--version`
     Then exit code 0
     And output contains 'fileset, version [\d.\d.\d]'
