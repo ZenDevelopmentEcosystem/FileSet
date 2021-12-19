@@ -3,7 +3,7 @@ Run Command
 
 Executes a command on the files scoped by the set. The command is applied *on* a `store`.
 
-Files not in the cache will not be fetched by default. If they are not in the cache,
+Assets not in the cache will not be fetched by default. If they are not in the cache,
 a warning will be printed but otherwise ignored.
 
 To trigger an implicit `get` on any missing assets, run with:

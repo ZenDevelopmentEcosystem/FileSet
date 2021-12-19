@@ -9,6 +9,9 @@ The command is applied *on* a `store` and must have a valid set-definition.
 Assets in the cache will not be fetched by default. If they are not in the cache,
 a warning will be printed but otherwise ignored.
 
+The destination directory must be on the same filesystem as the cache directory,
+unless symbolic links are used.
+
 The destination directory is specified as the principle positional argument:
 
 ```console
@@ -44,8 +47,9 @@ To create symbolic links (instead of the default hard links):
 fileset <store> fs [--symbolic] ...
 ```
 
-Symbolic links will automatically be used if assets are directories, since hardlinks
-can't be created for directories.
+Symbolic links will automatically be used if assets are directories, since hard links
+can't be created for directories. Symbolic must be used if the destination directory
+is on a different filesystem than the store cache.
 
 To create the link structure for a subset of the set, specify one or more paths after
 the destination directory:
