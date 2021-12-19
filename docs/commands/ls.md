@@ -2,8 +2,13 @@ List Command
 ============
 
 List the assets in a set. Only cached assets will be listed.
+
 If an asset is requested using ID, and the asset isn't cached,
 it will not be shown.
+
+Assets that appear multiple times in the set, will only be listed once.
+
+The list is sorted alphabetical.
 
 ```console
 fileset <store> ls
@@ -22,6 +27,12 @@ To show uncached (missing) assets, run:
 
 ```console
 fileset <store> ls --missing
+```
+
+To show filenames as they exist in the cache instead of the IDs, run:
+
+```console
+fileset <store> ls --filename
 ```
 
 To list a subset of the set, specify one or more paths:

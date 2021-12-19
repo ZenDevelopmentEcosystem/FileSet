@@ -9,6 +9,7 @@ Commands:
 * [`<store>` ls](commands/ls.md)
 * [`<store>` rm](commands/rm.md)
 * [`<store>` run](commands/run.md)
+* [`<store>` fs](commands/fs.md)
 
 File-Store Definitions
 ----------------------
