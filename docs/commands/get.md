@@ -3,7 +3,7 @@ Get Command
 
 Get files into the file-cache. The command is applied *on* a `store`.
 
-update index before get:
+Update index before get:
 
 ```console
 fileset <store> get [--index-update] ...
@@ -12,13 +12,7 @@ fileset <store> get [--index-update] ...
 Automatically apply the action without confirmation:
 
 ```console
-fileset <store> get [--force]
-```
-
-Print the filenames from the cache (useful for command-line scripting):
-
-```console
-fileset <store> get [--print]
+fileset <store> get [-f/--force]
 ```
 
 Use fileset (see [fileset](../fileset.md#sets) for more info):
@@ -33,19 +27,23 @@ unless `--set <fileset.yml>` is used.
 To get a subset of the set, specify one or more paths:
 
 ```console
- fileset <store> get [-s/--set <fileset.yml>] path/in/set ...
+ fileset <store> get path/in/set ...
 ```
 
 To get a specific asset ID, specify one or more IDs:
 
 ```console
-fileset <store> get [-s/--set <fileset.yml>] ID ...
+fileset <store> get ID ...
 ```
 
-To get a specific asset ID from the file-store without a set-definition, use the `get+` (get plus command),
-specify one or more IDs:
+To get a specific asset ID from the file-store without or outside current set-definition,
+use the `get+` (get plus command), and specify one or more IDs:
 
 ```console
 # ID from full index
 fileset <store> get+ <ID>
 ```
+
+Running `get+` without specifying an ID will get every asset in the store.
+
+`get+` can't be combined with `--set`.

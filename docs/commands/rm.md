@@ -13,24 +13,34 @@ Automatically apply the action without confirmation:
 fileset <store> rm [--force]
 ```
 
-If a .fileset file exists in the current working directory, it will be applied,
+Use fileset (see [fileset](../fileset.md#sets) for more info):
+
+```console
+fileset <store> rm [-s/--set <fileset.yml>] ...
+```
+
+If a `FileSet.yml` file exists in the current working directory, it will be applied,
 unless `--set <fileset.yml>` is used.
 
 To remove a subset of the set, specify one or more paths:
 
 ```console
-fileset <store> rm [-s/--set <fileset.yml>] path/in/set ...
+fileset <store> rm path/in/set ...
 ```
 
 To remove a specific asset ID from the cache, within the set, specify one or more IDs:
 
 ```console
-fileset <store> rm [-s/--set <fileset.yml>] ID ...
+fileset <store> rm ID ...
 ```
 
-To remove a specific asset ID from the cache without a set-definition, use the `rm+` (rm plus command),
-specify one or more IDs:
+To remove a specific asset ID from the cache without or outside current set-definition,
+use the `rm+` (rm plus command), and specify one or more IDs:
 
 ```console
 fileset <store> rm+ ID ...
 ```
+
+Running `rm+` without specifying an ID will remove every asset in the cache.
+
+`rm+` can't be combined with `--set`.
