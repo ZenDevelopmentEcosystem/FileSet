@@ -3,6 +3,7 @@ FileSet
 
 Commands:
 
+* [config](commands/config.md)
 * [stores](commands/stores.md)
 * [`<store>` index](commands/index.md)
 * [`<store>` get](commands/get.md)
@@ -34,8 +35,9 @@ on-get
 `cache` definition:
 
 path
-: File-path to cache location. The variable `${source}` can be used for the source name.
-  The path defaults to `~/.cache/fileset/${source}`.
+: File-path to cache location. The variable `${store}` can be used for the store name.
+  The path defaults to `~/.cache/fileset/${store}`. The path can be given as
+  absolute path, or relative to the configuration file.
 
 `on-get` event definition:
 
@@ -51,7 +53,7 @@ file-stores:
         source:
             <store-engine>
         cache:
-            path: ~/.cache/fileset/${source}
+            path: ~/.cache/fileset/${store}
         on-get:
             run: '<command> ${file}'
 ```
@@ -67,7 +69,7 @@ The asset "song1" is categorized as both pop and rock.
 Example:
 
 ```yaml
-set:
+sets:
     music:
         pop:
             - song1
@@ -101,12 +103,15 @@ Configuration example (relative to `file-stores > {store-name} > source`: ):
 
 ```yaml
 csv:
-    file: /mnt/remote/my-file-store/index.csv
+    index-file: /mnt/remote/my-file-store/index.csv
     id-column: id
     filename-column: filename
     filename-suffix: .txt
     root-path: /mnt/remote/my-file-store/data
 ```
+
+`index-file` and `root-path` can be given as absolute paths or relative paths
+to the config file.
 
 `index.csv` in the example above:
 

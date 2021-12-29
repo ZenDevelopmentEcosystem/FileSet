@@ -11,6 +11,7 @@ packages = [
 python = "^3.8"
 click = "*"
 coloredlogs = "*"
+"ruamel.yaml" = "*"
 
 [tool.poetry.dev-dependencies]
 shiv = "*"

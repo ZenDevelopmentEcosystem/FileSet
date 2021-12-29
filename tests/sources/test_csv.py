@@ -1,48 +1,47 @@
 import pytest
 
 from fileset.exceptions import FileSetException
-from fileset.sources.csv import create
+from fileset.sources.csv import CsvSource, constructor, representer
 
 
-def test_create():
-    result = create(
-        {
-            'file': 'index.csv',
-            'id-column': 'id',
-            'filename-column': 'filename',
-            'filename-suffix': '.txt',
-            'root-path': '/mnt/data'
-        })
-    assert result.file == 'index.csv'
-    assert result.id_column == 'id'
-    assert result.filename_column == 'filename'
-    assert result.filename_suffix == '.txt'
-    assert result.root_path == '/mnt/data'
+def get_raw():
+    return {
+        'index-file': 'index.csv',
+        'id-column': 'id',
+        'filename-column': 'filename',
+        'filename-suffix': '.txt',
+        'root-path': '/mnt/data'
+    }
 
 
-def test_create_missing_property_raise_exception():
+def get_csv():
+    return CsvSource('index.csv', 'id', 'filename', '.txt', '/mnt/data')
 
+
+def test_constructor():
+    result = constructor(get_raw())
+    expected = get_csv()
+    assert isinstance(result, CsvSource)
+    assert result == expected
+
+
+def test_constructor_missing_property_raise_exception():
+    raw = get_raw()
+    del raw['index-file']
     with pytest.raises(FileSetException) as ctx:
-        create(
-            {
-                # missing file
-                'id-column': 'id',
-                'filename-column': 'filename',
-                'filename-suffix': '.txt',
-                'root-path': '/mnt/data'
-            })
-    assert ctx.value.args[0] == "Missing property 'file' in csv definition"
+        constructor(raw)
+    assert ctx.value.args[0] == "Missing property 'index-file' in csv definition"
 
 
-def test_create_invalid_property_raise_exception():
+def test_constructor_invalid_property_raise_exception():
+    raw = get_raw()
+    raw['INVALID'] = ''
     with pytest.raises(FileSetException) as ctx:
-        create(
-            {
-                'file': 'index.csv',
-                'id-column': 'id',
-                'filename-column': 'filename',
-                'filename-suffix': '.txt',
-                'root-path': '/mnt/data',
-                'INVALID': '',
-            })
+        constructor(raw)
     assert ctx.value.args[0] == "Invalid property 'INVALID' in csv definition"
+
+
+def test_representer():
+    result = representer(get_csv())
+    expected = {'csv': get_raw()}
+    assert result == expected

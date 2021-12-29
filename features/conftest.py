@@ -5,7 +5,7 @@ from implementation.pip import *  # noqa: F403,F401
 from implementation.proc_check import *  # noqa: F403,F401
 from implementation.timeout import *  # noqa: F403,F401
 from infra import local  # noqa: F401
-from run import run_shell  # noqa: F401
+from run import environment, run_shell, working_directory  # noqa: F401
 
 
 def pytest_addoption(parser):

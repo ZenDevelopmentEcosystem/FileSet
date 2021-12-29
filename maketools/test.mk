@@ -7,6 +7,7 @@ UNITTEST.dir := tests
 
 .PHONY check: test systest
 
+test: export UNIT_TEST_MODE := True
 test:
 	$(Q)poetry run pytest $(UNITTEST.dir) $(UNITTEST.testargs) $(UNITTEST.covargs)
 

@@ -1,9 +1,19 @@
+import logging
+import os
+from collections import namedtuple
+
 from fileset.exceptions import FileSetException
 
+CONFIGURATION_ENVIRONMENTAL_VARIABLE = 'FILESET_CONFIG'
+CONFIGURATION_PROPERTIES = ['file-stores']
 STORE_PROPERTIES = ['source', 'cache', 'on-get']
 SOURCE_PROPERTIES = []
 CACHE_PROPERTIES = ['path']
 ON_GET_PROPERTIES = ['run']
+
+Store = namedtuple('Store', 'name, source, cache, on_get')
+Cache = namedtuple('Cache', 'path')
+OnGet = namedtuple('OnGet', 'run')
 
 
 def validate_properties(raw_config, valid_properties, section):
@@ -24,11 +34,21 @@ class ConfigFactory:
     def __init__(self):
         self.src_constructors = {}
 
+    def reg_src(self, name, constructor):
+        self.src_constructors[name] = constructor
+
+    def create_configuration(self, raw_config, config_file):
+        cfg = Configuration(config_file)
+        try:
+            validate_properties(raw_config, CONFIGURATION_PROPERTIES, 'root')
+            cfg.stores = missing_property_handler(lambda: self.create_stores(raw_config['file-stores']), 'root')
+        except Exception as err:
+            logging.error(f'Could not create configuration, error: {err}')
+            cfg.error = err
+        return cfg
+
     def create_stores(self, raw_config):
-        result = {}
-        for store in list(raw_config):
-            result[store] = self.create_store(store, raw_config[store])
-        return result
+        return {name: self.create_store(name, raw_store) for name, raw_store in raw_config.items()}
 
     def create_store(self, name, raw_config):
         source_type = list(raw_config['source'])[0]
@@ -38,7 +58,8 @@ class ConfigFactory:
             self.create_on_get(raw_config['on-get']))
 
     def create_cache(self, raw_config):
-        return Cache(raw_config['path'])
+        validate_properties(raw_config, CACHE_PROPERTIES, 'cache')
+        return missing_property_handler(lambda: Cache(raw_config['path']), 'cache')
 
     def create_on_get(self, raw_config):
         validate_properties(raw_config, ON_GET_PROPERTIES, 'on-get')
@@ -47,37 +68,65 @@ class ConfigFactory:
     def create_source(self, name, raw_config):
         return self.src_constructors[name](raw_config)
 
-    def reg_src(self, name, constructor):
-        self.src_constructors[name] = constructor
+
+class RawFactory:
+
+    def __init__(self):
+        self.src_representers = {}
+
+    def reg_src(self, cls, representer):
+        self.src_representers[cls] = representer
+
+    def create_configuration(self, configuration):
+        return {'file-stores': self.create_stores(configuration.stores)}
+
+    def create_stores(self, stores):
+        return {name: self.create_store(store) for name, store in stores.items()}
+
+    def create_store(self, store):
+        return {
+            'source': self.create_source(store.source),
+            'cache': self.create_cache(store.cache),
+            'on-get': self.create_on_get(store.on_get)
+        }
+
+    def create_cache(self, cache):
+        return {'path': cache.path}
+
+    def create_on_get(self, on_get):
+        return {'run': on_get.run}
+
+    def create_source(self, source):
+        return self.src_representers[type(source)](source)
 
 
-class Store:
+class Configuration():
 
-    def __init__(self, name, source, cache, on_get):
-        self.name = name
-        self.source = source
-        self.cache = cache
-        self.on_get = on_get
+    def __init__(self, config_file):
+        self.config_file = config_file
+        self.stores = {}
+        self.runs = {}
+        self.error = None
 
-
-class Cache:
-
-    def __init__(self, path):
-        self.path = path
-
-
-class OnEvent:
-
-    def __init__(self, run):
-        self.run = run
-
-
-class OnGet(OnEvent):
-    pass
+    def __eq__(self, other):
+        return isinstance(other, type(self)) \
+            and self.config_file == other.config_file \
+            and self.stores == other.stores \
+            and self.runs == other.runs \
+            and self.error == other.error
 
 
 CONFIG_FACTORY = ConfigFactory()
+RAW_FACTORY = RawFactory()
 
 
 def get_config_factory():
     return CONFIG_FACTORY
+
+
+def get_raw_factory():
+    return RAW_FACTORY
+
+
+def get_config_path():
+    return os.path.abspath(os.environ.get(CONFIGURATION_ENVIRONMENTAL_VARIABLE, os.path.expanduser('~/.fileset.yml')))
