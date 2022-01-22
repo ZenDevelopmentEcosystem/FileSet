@@ -3,12 +3,12 @@ file-stores:
   s1:
     source:
       csv:
-        index-file: ./index.csv
+        index-file: sources/csv/index.csv
         id-column: id
         filename-column: filename
         filename-suffix: .txt
-        root-path: .
+        root-path: sources/csv
     cache:
-      path: ./cache/${store}
+      path: ./cache/{store}
     on-get:
-      run: cat "${file}"
+      run: cat "{file}"
