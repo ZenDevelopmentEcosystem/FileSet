@@ -1,10 +1,13 @@
 Config Command
 ==============
 
-Command to print and validate the applied configuration.
+Command to print and validate the applied configuration. Note that paths that
+appear as relative paths in the configuration might be expanded to the absolute
+path and the displayed configuration might not be round-trip safe vs original
+configuration files.
 
-Defaults to `~/.fileset.yml`, but can be overridden by environmental variable
-`FILESET_CONFIG`.
+Configuration file location defaults to `~/.fileset.yml`, but can be overridden
+by environmental variable `FILESET_CONFIG`.
 
 Validate and print the fully applied configuration:
 
@@ -12,7 +15,8 @@ Validate and print the fully applied configuration:
 fileset config
 ```
 
-Silence printing of the configuration, only validate:
+Silence printing of the configuration, only validate; can not be combined with other
+print-options:
 
 ```console
 fileset config -q|--quite
