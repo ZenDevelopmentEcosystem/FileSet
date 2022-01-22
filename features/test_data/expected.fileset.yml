@@ -1,0 +1,14 @@
+---
+file-stores:
+  s1:
+    source:
+      csv:
+        index-file: ${RELATIVE_PATH}/sources/csv/index.csv
+        id-column: id
+        filename-column: filename
+        filename-suffix: .txt
+        root-path: ${RELATIVE_PATH}/sources/csv
+    cache:
+      path: ${RELATIVE_PATH}/cache/{store}
+    on-get:
+      run: cat "{file}"

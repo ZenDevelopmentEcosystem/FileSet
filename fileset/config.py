@@ -29,6 +29,13 @@ def missing_property_handler(func, section):
         raise FileSetException(f'Missing property {err} in {section} definition')
 
 
+def convert_cfg_path(path, config_file):
+    if not os.path.isabs(path):
+        config_dir = os.path.dirname(config_file)
+        path = os.path.abspath(os.path.join(config_dir, path))
+    return path
+
+
 class ConfigFactory:
 
     def __init__(self):
@@ -41,32 +48,33 @@ class ConfigFactory:
         cfg = Configuration(config_file)
         try:
             validate_properties(raw_config, CONFIGURATION_PROPERTIES, 'root')
-            cfg.stores = missing_property_handler(lambda: self.create_stores(raw_config['file-stores']), 'root')
+            cfg.stores = missing_property_handler(
+                lambda: self.create_stores(raw_config['file-stores'], config_file), 'root')
         except Exception as err:
             logging.error(f'Could not create configuration, error: {err}')
             cfg.error = err
         return cfg
 
-    def create_stores(self, raw_config):
-        return {name: self.create_store(name, raw_store) for name, raw_store in raw_config.items()}
+    def create_stores(self, raw_config, config_file):
+        return {name: self.create_store(name, raw_store, config_file) for name, raw_store in raw_config.items()}
 
-    def create_store(self, name, raw_config):
+    def create_store(self, name, raw_config, config_file):
         source_type = list(raw_config['source'])[0]
         source_raw = raw_config['source'][source_type]
         return Store(
-            name, self.create_source(source_type, source_raw), self.create_cache(raw_config['cache']),
-            self.create_on_get(raw_config['on-get']))
+            name, self.create_source(source_type, source_raw, config_file),
+            self.create_cache(raw_config['cache'], config_file), self.create_on_get(raw_config['on-get']))
 
-    def create_cache(self, raw_config):
+    def create_cache(self, raw_config, config_file):
         validate_properties(raw_config, CACHE_PROPERTIES, 'cache')
-        return missing_property_handler(lambda: Cache(raw_config['path']), 'cache')
+        return missing_property_handler(lambda: Cache(convert_cfg_path(raw_config['path'], config_file)), 'cache')
 
     def create_on_get(self, raw_config):
         validate_properties(raw_config, ON_GET_PROPERTIES, 'on-get')
         return missing_property_handler(lambda: OnGet(raw_config['run']), 'on-get')
 
-    def create_source(self, name, raw_config):
-        return self.src_constructors[name](raw_config)
+    def create_source(self, name, raw_config, config_file):
+        return self.src_constructors[name](raw_config, config_file)
 
 
 class RawFactory:

@@ -14,7 +14,7 @@ Scenario: Print applied config, no valid set-file
     And Environment variable `FILESET_CONFIG=./test_data/.fileset.yml`
     When fileset run with argument(s) `config`
     Then exit code 0
-    And content of YAML file './test_data/.fileset.yml' is in output
+    And content of YAML file './test_data/expected.fileset.yml' is in output
 
 Scenario: Print applied config, with valid set-file
     Given fileset
@@ -22,7 +22,7 @@ Scenario: Print applied config, with valid set-file
     And Environment variable `FILESET_CONFIG=./test_data/.fileset.yml`
     When fileset run with argument(s) `config --set ./test_data/FileSet.yml`
     Then exit code 0
-    And content of YAML file './test_data/.fileset.yml' is in output
+    And content of YAML file './test_data/expected.fileset.yml' is in output
 
 Scenario: Print set file, default
     Given fileset

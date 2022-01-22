@@ -2,17 +2,17 @@ import pytest
 
 from fileset.config import RawFactory
 
-from .configutils import DummySource, ObjectConfig, RawConfig, src_representer
+from .configutils import DummySource, RelObjectConfig, RelRawConfig, src_representer
 
 
 @pytest.fixture()
 def expected():
-    return RawConfig()
+    return RelRawConfig()
 
 
 @pytest.fixture()
 def cfg():
-    return ObjectConfig()
+    return RelObjectConfig()
 
 
 @pytest.fixture()

@@ -26,8 +26,9 @@ def fileset_run_with_argument(args, timeout, fileset_cmd, run_shell):
 
 @then(parsers.parse("content of YAML file '{yaml_file}' is in output"))
 def check_yaml_file_content_in_output(yaml_file, working_directory, proc_status):
-    yaml_file = os.path.join(working_directory, yaml_file)
+    yaml_file = os.path.normpath(os.path.join(working_directory, yaml_file))
     with open(yaml_file, 'r') as f:
         yaml_content = f.read().replace('---\n', '').strip()
+    yaml_content = yaml_content.replace('${RELATIVE_PATH}', os.path.dirname(yaml_file))
     msg = f'Expected content of YAML file {yaml_file}:\n{yaml_content}\n to be in:\n{proc_status.output()}'
     assert yaml_content in proc_status.output(), msg

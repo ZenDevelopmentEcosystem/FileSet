@@ -3,7 +3,7 @@ import pytest
 from fileset.config import ConfigFactory
 from fileset.exceptions import FileSetException
 
-from .configutils import ObjectConfig, RawConfig, src_constructor
+from .configutils import CONFIG_PATH, AbsObjectConfig, RelRawConfig, src_constructor
 
 
 def assert_invalid_property(ctx, section):
@@ -20,12 +20,12 @@ def assert_missing_property(ctx, property, section):
 
 @pytest.fixture()
 def raw():
-    return RawConfig()
+    return RelRawConfig()
 
 
 @pytest.fixture()
 def expected():
-    return ObjectConfig()
+    return AbsObjectConfig()
 
 
 @pytest.fixture()
@@ -45,6 +45,11 @@ def missing():
     return {}
 
 
+@pytest.fixture()
+def cfg_path():
+    return CONFIG_PATH
+
+
 def test_create_on_get(cf, raw, expected):
     result = cf.create_on_get(raw.on_get)
     assert result == expected.on_get
@@ -62,28 +67,28 @@ def test_create_on_get_missing_property_raise_exception(cf, missing):
     assert_missing_property(ctx, 'run', 'on-get')
 
 
-def test_create_cache(cf, raw, expected):
-    result = cf.create_cache(raw.cache)
+def test_create_cache(cf, raw, expected, cfg_path):
+    result = cf.create_cache(raw.cache, cfg_path)
     assert result == expected.cache
 
 
-def test_create_source(cf, raw, expected):
-    result = cf.create_source('src', raw.source['src'])
+def test_create_source(cf, raw, expected, cfg_path):
+    result = cf.create_source('src', raw.source['src'], cfg_path)
     assert result == expected.source
 
 
-def test_create_store(cf, raw, expected):
-    result = cf.create_store('store', raw.store)
+def test_create_store(cf, raw, expected, cfg_path):
+    result = cf.create_store('store', raw.store, cfg_path)
     assert result == expected.store
 
 
-def test_create_stores(cf, raw, expected):
-    result = cf.create_stores(raw.stores)
+def test_create_stores(cf, raw, expected, cfg_path):
+    result = cf.create_stores(raw.stores, cfg_path)
     assert result == expected.stores
 
 
-def test_create_configuration(cf, raw, expected):
-    result = cf.create_configuration(raw.configuration, 'config-file')
+def test_create_configuration(cf, raw, expected, cfg_path):
+    result = cf.create_configuration(raw.configuration, cfg_path)
     assert result == expected.configuration
 
 
